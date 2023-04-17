@@ -21,12 +21,14 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() => _loginUser();
+  void signUserIn() {
+    _loginUser();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset : false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
@@ -134,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: () {
                       print("WTF");
-                      },
+                    },
                     child: const SquareTile(imagePath: 'lib/images/phone.png'),
                   ),
 
@@ -193,8 +195,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
-          password: passwordController.text
-      );
+          password: passwordController.text);
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -222,9 +223,7 @@ class _LoginPageState extends State<LoginPage> {
     GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
     AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken
-    );
+        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
 
     await FirebaseAuth.instance.signInWithCredential(credential);
   }

@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_text_app/auth/login_page.dart';
 import 'package:image_text_app/components/register_button.dart';
 import '../components/my_textfield.dart';
-import '../components/square_tile.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -20,7 +20,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
 
   // sign user up method
-  void signUserUp() {}
+  void signUserUp() {
+    _registerUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +117,41 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  // Perform login
+  Future<void> _registerUser() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
 
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text);
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      if (e.code == 'email-already-in-use') {
+        _emailExist();
+      }
+    } finally {
+
+    }
+  }
+
+  void _emailExist() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text(
+        'This Email is already associated with another account...',
+        style: TextStyle(color: Colors.white),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.redAccent.shade200,
+    ));
+  }
 
   void _loginPage(BuildContext context) async {
     await Navigator.push(
