@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                   // google button
                   GestureDetector(
                     onTap: () {},
-                    child: const SquareTile(imagePath: 'lib/images/google.png'),
+                    child: const SquareTile(imagePath: 'lib/images/phone.png'),
                   ),
 
                   const SizedBox(width: 25),
@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                   // apple button
                   GestureDetector(
                     onTap: () {},
-                    child: const SquareTile(imagePath: 'lib/images/apple.png'),
+                    child: const SquareTile(imagePath: 'lib/images/google.png'),
                   ),
                 ],
               ),
