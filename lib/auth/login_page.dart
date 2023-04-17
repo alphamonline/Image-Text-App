@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_text_app/auth/register_page.dart';
-
 import '../components/login_button.dart';
 import '../components/my_textfield.dart';
 import '../components/square_tile.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,11 +17,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {}
+  void signUserIn() => _loginUser();
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
 
               // username textfield
               MyTextField(
-                controller: usernameController,
-                hintText: 'Username',
+                controller: emailController,
+                hintText: 'Email',
                 obscureText: false,
               ),
 
@@ -129,7 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   // google button
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      print("WTF");
+                      },
                     child: const SquareTile(imagePath: 'lib/images/phone.png'),
                   ),
 
@@ -137,7 +142,9 @@ class _LoginPageState extends State<LoginPage> {
 
                   // apple button
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      _googleSignIn();
+                    },
                     child: const SquareTile(imagePath: 'lib/images/google.png'),
                   ),
                 ],
@@ -171,6 +178,77 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  // Perform login
+  Future<void> _loginUser() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    try {
+      await _auth.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      if (e.code == 'user-not-found') {
+        _noUserSnack();
+      } else if (e.code == 'wrong-password') {
+        _wrongPassSnack();
+      }
+    } finally {
+
+    }
+  }
+
+  void _googleSignIn() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  void _noUserSnack() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text(
+        'Email does not exist. Please sign in with google.',
+        style: TextStyle(color: Colors.white),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.redAccent.shade200,
+    ));
+  }
+
+  void _wrongPassSnack() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text(
+        'Password does not match our records',
+        style: TextStyle(color: Colors.white),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.redAccent.shade200,
+    ));
   }
 
   void _registerPage(BuildContext context) async {

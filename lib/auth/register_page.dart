@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_text_app/auth/login_page.dart';
 import 'package:image_text_app/components/register_button.dart';
 import '../components/my_textfield.dart';
@@ -112,6 +114,8 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+
 
   void _loginPage(BuildContext context) async {
     await Navigator.push(
