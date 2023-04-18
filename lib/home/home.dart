@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   getImage(ImageSource.camera);
                 },
                 child: const ListTile(
@@ -74,6 +75,7 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   getImage(ImageSource.gallery);
                 },
                 child: const ListTile(
@@ -87,6 +89,7 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   _signOut();
                 },
                 child: const ListTile(
