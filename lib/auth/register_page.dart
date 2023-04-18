@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_text_app/auth/login_page.dart';
@@ -117,21 +119,22 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // Perform login
+  // Perform user registration
   Future<void> _registerUser() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+    Timer(const Duration(seconds:3), () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
+    });
 
     try {
       await _auth.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text);
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == 'email-already-in-use') {
