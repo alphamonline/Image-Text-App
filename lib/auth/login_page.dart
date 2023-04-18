@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -184,19 +186,20 @@ class _LoginPageState extends State<LoginPage> {
 
   // Perform login
   Future<void> _loginUser() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+    Timer(const Duration(seconds: 3), () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
+    });
 
     try {
       await _auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text);
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == 'user-not-found') {
@@ -204,19 +207,19 @@ class _LoginPageState extends State<LoginPage> {
       } else if (e.code == 'wrong-password') {
         _wrongPassSnack();
       }
-    } finally {
-
-    }
+    } finally {}
   }
 
   void _googleSignIn() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+    Timer(const Duration(seconds: 3), () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
+    });
 
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
